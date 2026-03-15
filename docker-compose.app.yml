@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ${DOCKER_IMAGE:-myapp-backend:latest}
+    build: .
+    container_name: fastapi-backend
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}  # 92.4.143.135
+      DB_PORT: ${DB_PORT:-5432}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  hasura:
+    image: hasura/graphql-engine:latest
+    container_name: hasura
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+      HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+networks:
+  app-network:
+    driver: bridge
