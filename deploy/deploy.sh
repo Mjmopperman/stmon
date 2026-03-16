@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.DB_VM_USER }}
           key: ${{ secrets.DB_VM_SSH_KEY }}
           script: |
-            cd /home/ubuntu/myapp
+            cd /home/ubuntu/stmon
             git pull origin main
             
             # Check if PostgreSQL is already running
@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.APP_VM_USER }}
           key: ${{ secrets.APP_VM_SSH_KEY }}
           script: |
-            cd /home/ubuntu/myapp
+            cd /home/ubuntu/stmon
             git pull origin main
             
             # Stop containers
