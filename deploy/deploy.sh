@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.DB_VM_SSH_KEY }}
           script: |
             cd /home/ubuntu/stmon
-            git pull origin main
+            git pull origin master
             
             # Check if PostgreSQL is already running
             if docker ps | grep -q postgres; then
@@ -55,7 +55,7 @@ jobs:
           key: ${{ secrets.APP_VM_SSH_KEY }}
           script: |
             cd /home/ubuntu/stmon
-            git pull origin main
+            git pull origin master
             
             # Stop containers
             docker-compose -f docker-compose.app.yml down
