@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
     DB_NAME: str
-    DB_HOST: str = "92.4.143.135"
+    DB_HOST: str 
     DB_PORT: int = 5432
     
     # Hasura settings (not used by FastAPI, but needed for .env validation)
@@ -15,3 +15,6 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         extra = "ignore"  # Ignore extra fields in .env
+
+settings = Settings()
+
