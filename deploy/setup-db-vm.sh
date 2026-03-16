@@ -29,11 +29,11 @@ sudo ufw allow 5432
 sudo ufw --force enable
 
 # Create project directory
-mkdir -p /home/$USER/myapp
-cd /home/$USER/myapp
+mkdir -p /home/$USER/stmon
+cd /home/$USER/stmon
 
 # Clone repository
-git clone https://github.com/mjmopperman/myapp.git .
+git clone https://github.com/mjmopperman/stmon.git .
 
 # Create .env from example
 cp .env.example .env
@@ -41,6 +41,6 @@ cp .env.example .env
 echo ""
 echo "=== IMPORTANT ==="
 echo "Edit .env file with your database credentials:"
-echo "  nano /home/$USER/myapp/.env"
+echo "  nano /home/$USER/stmon/.env"
 echo ""
 echo "Then run: docker-compose -f docker-compose.db.yml up -d"

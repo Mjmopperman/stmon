@@ -32,17 +32,17 @@ sudo ufw allow 8080
 sudo ufw --force enable
 
 # Create project directory
-mkdir -p /home/$USER/myapp
-cd /home/$USER/myapp
+mkdir -p /home/$USER/stmon
+cd /home/$USER/stmon
 
 # Clone repository
-git clone https://github.com/mjmopperman/myapp.git .
+git clone https://github.com/mjmopperman/stmon.git .
 
 # Create .env from example
 cp .env.example .env
 
 # Setup NGINX
-sudo tee /etc/nginx/sites-available/myapp << 'EOF'
+sudo tee /etc/nginx/sites-available/stmon << 'EOF'
 server {
     listen 80;
     server_name _;
@@ -76,14 +76,14 @@ server {
 }
 EOF
 
-sudo ln -sf /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/stmon /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t && sudo systemctl restart nginx
 
 echo ""
 echo "=== IMPORTANT ==="
 echo "Edit .env file:"
-echo "  nano /home/$USER/myapp/.env"
+echo "  nano /home/$USER/stmon/.env"
 echo ""
 echo "Set DB_HOST to your database VM IP: 92.4.143.135"
 echo ""
