@@ -40,7 +40,7 @@ jobs:
 
   deploy-application:
     runs-on: ubuntu-latest
-    name: Deploy Application to VM 2
+    name: Deploy Application to VM 2 
     needs: deploy-database
     
     steps:
