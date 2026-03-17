@@ -15,6 +15,9 @@ services:
     networks:
       - db-network
       - app-network
+    volumes:
+      - ./app:/app/app  # Mount code for auto-reload (local dev only)
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s

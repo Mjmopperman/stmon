@@ -27,6 +27,11 @@ async def startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+@app.get("/test")
+async def test():
+    return {"message": "Test endpoint is working. I am sure of it."}  
+
+
 @app.get("/")
 async def root():
     return {"message": "API is running", "docs": "/docs"}
