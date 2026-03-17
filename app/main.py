@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import users
 from app.database import engine
 from app.models import Base
+from app.hasura import hasura_client
 
 app = FastAPI(
     title="My API",
@@ -39,3 +40,33 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy", "database": "connected"}
+
+
+@app.get("/hasura-health")
+async def hasura_health():
+    """Check if Hasura is accessible from FastAPI."""
+    try:
+        # Simple introspection query to check if Hasura is responding
+        result = await hasura_client.query("{ __typename }")
+        return {
+            "status": "connected",
+            "hasura_response": result
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+
+@app.post("/hasura-query")
+async def hasura_query(query: str):
+    """Execute a custom GraphQL query against Hasura.
+
+    Example query: { users { id email } }
+    """
+    try:
+        result = await hasura_client.query(query)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
