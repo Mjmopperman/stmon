@@ -51,13 +51,21 @@ jobs:
           script: |
             cd /home/ubuntu/stmon
             git pull origin master
-            
+
             docker compose -f docker-compose.app.yml down
             docker compose -f docker-compose.app.yml build --no-cache
             docker compose -f docker-compose.app.yml up -d
-            
+
+            echo "=== Running Containers ==="
+            docker ps
+
+            echo "=== Container Logs (last 30 lines) ==="
+            docker logs --tail 30 fastapi-backend || echo "Container not ready yet"
+
             sleep 10
+
+            echo "=== Health Check ==="
             curl -f http://localhost:8000/health || exit 1
-            
+
             docker system prune -f
             echo "✅ Application VM deployed!"
