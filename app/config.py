@@ -17,5 +17,3 @@ class Settings(BaseSettings):
         extra = "ignore"  # Ignore extra fields in .env
 
 settings = Settings()
-
-#What is wrong with you?>>>> 333

@@ -22,3 +22,5 @@ myapp/
 └── .github/
     └── workflows/
         └── deploy.yml         # Deploys to both VMs
+
+
