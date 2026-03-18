@@ -1,0 +1,37 @@
+table:
+  name: posts
+  schema: public
+  columns:
+    - name: id
+      type: SERIAL
+      nullable: false
+      primary_key: true
+    - name: title
+      type: VARCHAR(255)
+      nullable: false
+    - name: content
+      type: TEXT
+      nullable: true
+    - name: user_id
+      type: INTEGER
+      nullable: true
+    - name: created_at
+      type: TIMESTAMP
+      default: CURRENT_TIMESTAMP
+      nullable: true
+  indexes:
+    - name: idx_posts_user
+      column: user_id
+    - name: idx_posts_created
+      column: created_at
+  foreign_keys:
+    - column: user_id
+      references:
+        table: users
+        column: id
+      on_delete: CASCADE
+  hasura:
+    object_relationships:
+      - name: user
+        column: user_id
+    array_relationships: []

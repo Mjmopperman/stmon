@@ -1,0 +1,29 @@
+table:
+  name: users
+  schema: public
+  columns:
+    - name: id
+      type: SERIAL
+      nullable: false
+      primary_key: true
+    - name: email
+      type: VARCHAR(255)
+      nullable: false
+      unique: true
+    - name: name
+      type: VARCHAR(100)
+      nullable: false
+    - name: created_at
+      type: TIMESTAMP
+      default: CURRENT_TIMESTAMP
+      nullable: true
+  indexes:
+    - name: idx_users_email
+      column: email
+  foreign_keys: []
+  hasura:
+    object_relationships: []
+    array_relationships:
+      - name: posts
+        foreign_table: posts
+        foreign_column: user_id

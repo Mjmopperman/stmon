@@ -1,0 +1,17 @@
+You are a Python script generator. Write a Python script that:
+
+1. Reads all .yml files from the tables/ directory
+2. Sends the PostgreSQL DDL to a PostgreSQL database using psycopg2
+   - Connection string from environment variable DATABASE_URL
+   - Sub-pass 1: all CREATE TABLE statements
+   - Sub-pass 2: all ALTER TABLE foreign key constraints
+   - Sub-pass 3: all CREATE INDEX statements
+3. Sends the Hasura payload to the Hasura metadata API using requests
+   - Hasura endpoint from environment variable HASURA_ENDPOINT
+   - Hasura admin secret from environment variable HASURA_ADMIN_SECRET
+   - Sub-pass 1: track all tables
+   - Sub-pass 2: create all relationships
+4. Prints success or error per operation — does not abort on non-fatal errors
+5. Is fully idempotent — safe to run multiple times
+
+Output: a single Python script saved as output/apply.py
