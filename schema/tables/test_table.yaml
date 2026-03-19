@@ -27,3 +27,5 @@ columns:
     default: 0
 
 primary_key: [id]
+
+output_file: db/migrations/001_create_test_table.sql

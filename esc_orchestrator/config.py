@@ -15,3 +15,4 @@ OLLAMA_TIMEOUT  = 120
 STATUS_PENDING  = "pending"
 STATUS_DONE     = "done"
 STATUS_SKIPPED  = "skipped"
+STATUS_DEPLOYED = "deployed"

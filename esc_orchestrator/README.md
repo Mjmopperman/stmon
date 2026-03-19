@@ -82,12 +82,12 @@ Edit `esc_orchestrator/config.py` to change:
 
 ## Task Statuses
 
-| Status  | Meaning                   |
-|---------|---------------------------|
-| pending | Not yet processed         |
-| done    | Processed, output saved   |
-| skipped | Deliberately deferred     |
-
+| Status   | Meaning                                |
+|----------|----------------------------------------|
+| pending  | Not yet processed                      |
+| done     | Processed, output saved                |
+| skipped  | Deliberately deferred                  |
+| deployed | Reviewed, approved, placed in project  |
 ---
 
 ## Queue File

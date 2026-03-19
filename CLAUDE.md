@@ -133,6 +133,18 @@ The build queue lives in `build/queue.yaml`.
 
 ## Session Update
 
+_Last updated: 2026-03-19_
+
+### Completed
+- **T001:** `schema/tables/test_table.yaml`
+  Output: `build/output/T001_schema_tables_test_table.txt`
+  Deployed: `db/migrations/002_create_test_table.sql`
+
+### Up Next
+- Nothing pending. Add real ESC table specs tomorrow.
+
+## Session Update
+
 _Last updated: —_
 
 ### Completed
