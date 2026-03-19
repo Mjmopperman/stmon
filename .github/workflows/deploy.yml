@@ -25,7 +25,30 @@ jobs:
             git pull origin master
             
             if docker ps | grep -q postgres; then
-              echo "Database already running, skipping..."
+              echo "Database running — checking for new migrations..."
+              for f in $(ls /home/ubuntu/stmon/db/migrations/*.sql | sort); do
+                filename=$(basename $f)
+                applied=$(docker exec postgres psql \
+                  -U ${{ secrets.DB_USER }} \
+                  -d ${{ secrets.DB_NAME }} \
+                  -tAc "SELECT count(*) FROM migrations \
+                        WHERE filename='$filename'" 2>/dev/null || echo "0")
+                applied=$(echo $applied | tr -d '[:space:]')
+                if [ "$applied" = "0" ]; then
+                  echo "Applying: $filename"
+                  docker exec -i postgres psql \
+                    -U ${{ secrets.DB_USER }} \
+                    -d ${{ secrets.DB_NAME }} < $f
+                  docker exec postgres psql \
+                    -U ${{ secrets.DB_USER }} \
+                    -d ${{ secrets.DB_NAME }} \
+                    -c "INSERT INTO migrations (filename) \
+                        VALUES ('$filename') ON CONFLICT DO NOTHING"
+                  echo "✅ Applied: $filename"
+                else
+                  echo "⏭️  Skipped: $filename (already applied)"
+                fi
+              done
             else
               echo "Starting fresh database..."
               docker compose -f docker-compose.db.yml up -d
