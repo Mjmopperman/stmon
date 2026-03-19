@@ -2,15 +2,34 @@ You are a Hasura metadata API payload generator. Read all .yml files in the
 tables/ folder. Your job is to produce a single valid JSON payload that can 
 be sent to the Hasura metadata API.
 
-Rules:
+General rules:
 - Use the bulk API format: {"type": "bulk", "args": [...]}
-- First, generate a pg_track_table entry for every table
-- Then, generate a pg_create_object_relationship entry for every item in 
-  hasura.object_relationships — the column mapping uses the specified column
-- Then, generate a pg_create_array_relationship entry for every item in 
-  hasura.array_relationships — using foreign_table and foreign_column
 - Use "source": "default" on all entries
 - Use the schema value from each YAML on all entries
 - Output only valid JSON — no explanations, no markdown
+
+Ordering rules:
+- First, generate a pg_track_table entry for every table
+- Then, generate all pg_create_object_relationship entries
+- Then, generate all pg_create_array_relationship entries
+
+Relationship rules:
+- For pg_create_object_relationship, the FK lives on the current table —
+  foreign_key_constraint_on is a plain string containing only the column 
+  name, no table block:
+  "using": {
+    "foreign_key_constraint_on": "user_id"
+  }
+- For pg_create_array_relationship, the FK lives on the other table —
+  foreign_key_constraint_on is an object containing both column and table:
+  "using": {
+    "foreign_key_constraint_on": {
+      "column": "user_id",
+      "table": {
+        "schema": "public",
+        "name": "posts"
+      }
+    }
+  }
 
 Output: a single JSON file saved as output/hasura_metadata.json

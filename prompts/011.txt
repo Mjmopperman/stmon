@@ -1,0 +1,11 @@
+Write only a Python main block that:
+- Loads .env using dotenv load_dotenv()
+- Reads HASURA_ENDPOINT and HASURA_ADMIN_SECRET from os.environ
+- Reads all .yml files from the tables/ directory using pathlib
+- Parses each file using yaml.safe_load()
+- Calls track_tables(tables, endpoint, secret)
+- Calls create_relationships(tables, endpoint, secret)
+
+Output only the main block starting with if __name__ == "__main__":
+— no imports, no function definitions, no explanations, no markdown fences.
+Append to output/hasura_apply.py

@@ -1,0 +1,11 @@
+Write only a single Python function called track_tables(tables, endpoint, secret) that:
+- Accepts a list of parsed YAML table definitions, a Hasura endpoint URL, 
+  and an admin secret string
+- For each table sends a pg_track_table POST request to the Hasura metadata API
+- Sets x-hasura-admin-secret header from secret
+- Uses "source": "default" and the schema value from the YAML
+- Prints success or error per table without aborting on error
+
+Output only the function — no imports, no main block, no explanations, 
+no markdown fences.
+Append to output/hasura_apply.py

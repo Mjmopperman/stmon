@@ -1,0 +1,9 @@
+Write only a single Python function called get_pg_connection() that:
+- Loads .env using dotenv load_dotenv()
+- Reads DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT from os.environ
+- Builds a psycopg2 connection string from those variables
+- Returns a psycopg2 connection object
+
+Output only the function — no imports, no main block, no explanations, 
+no markdown fences.
+Append to output/pg_apply.py

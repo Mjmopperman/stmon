@@ -1,0 +1,61 @@
+{
+  "type": "bulk",
+  "args": [
+    {
+      "type": "pg_track_table",
+      "args": {
+        "source": "default",
+        "schema": "public",
+        "name": "users"
+      }
+    },
+    {
+      "type": "pg_track_table",
+      "args": {
+        "source": "default",
+        "schema": "public",
+        "name": "posts"
+      }
+    },
+    {
+      "type": "pg_create_object_relationship",
+      "args": {
+        "source": "default",
+        "table": {
+          "schema": "public",
+          "name": "posts"
+        },
+        "name": "user",
+        "using": {
+          "foreign_key_constraint_on": {
+            "column": "user_id",
+            "table": {
+              "schema": "public",
+              "name": "users"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "pg_create_array_relationship",
+      "args": {
+        "source": "default",
+        "table": {
+          "schema": "public",
+          "name": "users"
+        },
+        "name": "posts",
+        "using": {
+          "foreign_key_constraint_on": {
+            "column": "user_id",
+            "table": {
+              "schema": "public",
+              "name": "posts"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

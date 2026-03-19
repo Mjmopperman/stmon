@@ -35,6 +35,7 @@ services:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_ADMIN_SECRET}
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      HASURA_GRAPHQL_METADATA_DIR: /hasura-metadata
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -43,6 +44,10 @@ services:
       - app-network
     depends_on:
       - backend
+    volumes:
+      - ./hasura/metadata:/hasura-metadata
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/console-assets:/srv/console-assets
 
 networks:
   app-network:

@@ -1,0 +1,12 @@
+Write only a Python main block that:
+- Reads all .yml files from the tables/ directory using pathlib
+- Parses each file using yaml.safe_load()
+- Calls get_pg_connection() to get a connection
+- Calls create_tables(conn, tables)
+- Calls create_foreign_keys(conn, tables)
+- Calls create_indexes(conn, tables)
+- Closes the connection when done
+
+Output only the main block starting with if __name__ == "__main__": 
+— no imports, no function definitions, no explanations, no markdown fences.
+Append to output/pg_apply.py

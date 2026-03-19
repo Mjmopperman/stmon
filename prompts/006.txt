@@ -1,0 +1,10 @@
+Write only a single Python function called create_foreign_keys(conn, tables) that:
+- Accepts a psycopg2 connection and a list of parsed YAML table definitions
+- For each foreign_key entry in each table generates and executes an 
+  ALTER TABLE ADD CONSTRAINT statement
+- Uses IF NOT EXISTS pattern where possible
+- Prints success or error per constraint without aborting on error
+
+Output only the function — no imports, no main block, no explanations, 
+no markdown fences.
+Append to output/pg_apply.py

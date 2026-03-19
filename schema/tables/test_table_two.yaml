@@ -1,0 +1,29 @@
+version: 2
+kind: table
+
+meta:
+  description: A simple test table to verify the orchestrator works
+
+table:
+  name: test_table
+  schema: public
+
+columns:
+  - name: id
+    type: uuid
+    default: gen_random_uuid()
+    nullable: false
+
+  - name: name
+    type: text
+    nullable: false
+
+  - name: created_at
+    type: timestamptz
+    default: now()
+
+  - name: number_of_items
+    type: integer
+    default: 0
+
+primary_key: [id]
