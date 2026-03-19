@@ -33,7 +33,7 @@ services:
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_METADATA_DIR: /hasura-metadata
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
-      HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
     volumes:
       - ./hasura/metadata:/hasura-metadata
       - ./hasura/migrations:/hasura-migrations
-      - ./hasura/console-assets:/srv/console-assets
+
 
 networks:
   app-network:
