@@ -24,10 +24,12 @@ CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at);
 -- Insert sample data
 INSERT INTO users (email, name) VALUES 
     ('john@example.com', 'John Doe'),
-    ('jane@example.com', 'Jane Smith')
+    ('jane@example.com', 'Jane Smith'),
+    ('marinus.opperman@gmail.com','Marinus Opperman')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO posts (title, content, user_id) VALUES 
     ('First Post', 'This is my first post!', 1),
     ('Second Post', 'Another interesting post.', 2)
+    ('')
 ON CONFLICT DO NOTHING;

@@ -5,6 +5,15 @@ from app.database import engine
 from app.models import Base
 from app.hasura import hasura_client
 
+from typing import Annotated
+
+from fastapi import Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+
 app = FastAPI(
     title="My API",
     description="API with PostgreSQL + Hasura",
@@ -22,6 +31,13 @@ app.add_middleware(
 
 # Include routers
 app.include_router(users.router, prefix="/api", tags=["users"])
+
+
+@app.get("/items/")
+async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
+    return {"token": token}
+
+
 
 @app.on_event("startup")
 async def startup():
