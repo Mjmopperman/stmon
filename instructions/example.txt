@@ -1,0 +1,29 @@
+# Example text file for example_tool_usage.py
+# One natural language prompt per line
+# Lines starting with # are comments (ignored)
+# Empty lines are also ignored
+
+# Create tables
+#Create a users table with id, email, password_hash, created_at
+
+#Create a posts table with id, title, content, user_id foreign key to users, created_at
+
+# Add more fields
+# Add a status field to posts with type varchar length 50 default draft
+#Add an updated_at timestamp field to posts
+
+# Verify
+#List all tables and their fields
+
+#Complexes name change
+#Change the name of the table called 'complexes' to just 'complex'.
+
+#Create a model by using the 'complex' table and then create a GET end route to display a list of complexes
+
+#Please change the endpoint get_complexes to complex_list and the path to '/complex/list'
+
+#Create a POST endpoint that updates a single complex. the path should be 'comlex/update/{id}' and the id should be of type uuid.
+
+#Add 'product' entity.
+
+Sync all endpoints with database tables

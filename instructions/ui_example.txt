@@ -1,0 +1,18 @@
+# UI Example Instructions (one prompt per line)
+# Lines starting with # are comments
+# Run with: python example_tool_usage.py -f instructions/ui_example.txt
+
+# Create user management pages
+Create a user list page
+Add a table component to the user list page showing users
+
+# Create detail page
+Create a user detail page for viewing a single user
+Add a detail component to show user information
+
+# Create form page
+Create a user create page for adding new users
+Add a form component with fields for name, email, and password
+
+# List all pages
+List all pages

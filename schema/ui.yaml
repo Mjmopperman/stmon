@@ -1,0 +1,24 @@
+pages:
+  user_list:
+    title: User List
+    components:
+    - type: table
+      id: userTable
+      title: Users
+      endpoint: users_list
+    description: Page to view all users
+  user_detail:
+    title: User Details
+    components:
+    - type: detail
+      id: userDetail
+      title: User Details
+      endpoint: users_get
+    description: Page to view details of a user
+  user_create:
+    title: Create User
+    components:
+    - type: form
+      id: userForm
+      title: User Form
+    description: Form to create new users

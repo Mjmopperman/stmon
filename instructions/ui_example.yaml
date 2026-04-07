@@ -1,0 +1,32 @@
+# Example YAML instructions for UI tools
+#
+# This file demonstrates how to use UI tools with natural language prompts
+# or direct tool calls.
+#
+# Run with: python example_tool_usage.py -f instructions/ui_example.yaml
+
+ui: schema/ui.yaml
+
+instructions:
+  # Create pages for a user management interface
+  - prompt: "Create a user list page with a table component"
+
+  - prompt: "Create a user detail page with a detail component"
+
+  - prompt: "Create a user create page with a form component"
+
+  # You can also use direct tool calls:
+  # - tool: create_page
+  #   params:
+  #     name: user_edit
+  #     title: Edit User
+  #     description: Form to edit existing user
+  #     primary_actor: Admin
+
+  # - tool: add_component
+  #   params:
+  #     page: user_edit
+  #     component_type: form
+  #     component_id: userEditForm
+  #     title: Edit User Form
+  #     endpoint: user_update

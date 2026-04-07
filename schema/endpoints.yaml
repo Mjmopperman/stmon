@@ -1,0 +1,350 @@
+endpoints:
+  complex_update_id:
+    path: /complex/update/{id}
+    method: POST
+  product_get_id:
+    path: /product/get/{id}
+    method: GET
+    description: Get a single product by ID
+    response: Product
+  product_update_id:
+    path: /product/update/{id}
+    method: POST
+    description: Update a product by ID
+    request: Product
+    response: Product
+  product_delete_id:
+    path: /product/delete/{id}
+    method: DELETE
+    description: Delete a product by ID
+  post_get_id:
+    path: /post/get/{id}
+    method: GET
+    description: Get a single post by ID
+    response: Post
+  post_update_id:
+    path: /post/update/{id}
+    method: POST
+    description: Update a post by ID
+    request: Post
+    response: Post
+  post_delete_id:
+    path: /post/delete/{id}
+    method: DELETE
+    description: Delete a post by ID
+  user_list:
+    path: /user/list
+    method: GET
+    description: List all user
+    response: User[]
+    graphql_query: "query {\n    user {\n        id\n            email\n         \
+      \   password_hash\n            created_at\n            is_active\n    }\n}"
+    graphql_type: query
+  user_get:
+    path: /user/{id}
+    method: GET
+    description: Get a single user by ID
+    response: User
+    graphql_query: "query GetUser($id: Int!) {\n    user(where: {id: {_eq: $id}})\
+      \ {\n        id\n            email\n            password_hash\n            created_at\n\
+      \            is_active\n    }\n}"
+    graphql_type: query
+  user_create:
+    path: /user
+    method: POST
+    description: Create a new user
+    request: User
+    response: User
+    graphql_query: "mutation CreateUser($email: String!, $password_hash: String!,\
+      \ $is_active: Boolean) {\n    insert_user(objects: {email: $email, password_hash:\
+      \ $password_hash, is_active: $is_active}) {\n        returning {\n         \
+      \   id\n            email\n            password_hash\n            created_at\n\
+      \            is_active\n        }\n    }\n}"
+    graphql_type: mutation
+  user_update:
+    path: /user/{id}
+    method: PUT
+    description: Update a user by ID
+    request: User
+    response: User
+    graphql_query: "mutation UpdateUser($id: Int!, $changes: user_set_input!) {\n\
+      \    update_user(where: {id: {_eq: $id}}, _set: $changes) {\n        returning\
+      \ {\n            id\n            email\n            password_hash\n        \
+      \    created_at\n            is_active\n        }\n    }\n}"
+    graphql_type: mutation
+  user_delete:
+    path: /user/{id}
+    method: DELETE
+    description: Delete a user by ID
+    graphql_query: "mutation DeleteUser($id: Int!) {\n    delete_user(where: {id:\
+      \ {_eq: $id}}) {\n        affected_rows\n    }\n}"
+    graphql_type: mutation
+  post_list:
+    path: /post/list
+    method: GET
+    description: List all post
+    response: Post[]
+    graphql_query: "query {\n    post {\n        id\n            title\n         \
+      \   content\n            user_id\n            created_at\n            status\n\
+      \            updated_at\n            published_at\n    }\n}"
+    graphql_type: query
+  post_get:
+    path: /post/{id}
+    method: GET
+    description: Get a single post by ID
+    response: Post
+    graphql_query: "query GetPost($id: uuid!) {\n    post(where: {id: {_eq: $id}})\
+      \ {\n        id\n            title\n            content\n            user_id\n\
+      \            created_at\n            status\n            updated_at\n      \
+      \      published_at\n    }\n}"
+    graphql_type: query
+  post_create:
+    path: /post
+    method: POST
+    description: Create a new post
+    request: Post
+    response: Post
+    graphql_query: "mutation CreatePost($title: String!, $content: String, $user_id:\
+      \ uuid, $status: String) {\n    insert_post(objects: {title: $title, content:\
+      \ $content, user_id: $user_id, status: $status}) {\n        returning {\n  \
+      \          id\n            title\n            content\n            user_id\n\
+      \            created_at\n            status\n            updated_at\n      \
+      \      published_at\n        }\n    }\n}"
+    graphql_type: mutation
+  post_update:
+    path: /post/{id}
+    method: PUT
+    description: Update a post by ID
+    request: Post
+    response: Post
+    graphql_query: "mutation UpdatePost($id: uuid!, $changes: post_set_input!) {\n\
+      \    update_post(where: {id: {_eq: $id}}, _set: $changes) {\n        returning\
+      \ {\n            id\n            title\n            content\n            user_id\n\
+      \            created_at\n            status\n            updated_at\n      \
+      \      published_at\n        }\n    }\n}"
+    graphql_type: mutation
+  post_delete:
+    path: /post/{id}
+    method: DELETE
+    description: Delete a post by ID
+    graphql_query: "mutation DeletePost($id: uuid!) {\n    delete_post(where: {id:\
+      \ {_eq: $id}}) {\n        affected_rows\n    }\n}"
+    graphql_type: mutation
+  complex_list:
+    path: /complex/list
+    method: GET
+    description: List all complex
+    response: Complex[]
+    graphql_query: "query {\n    complex {\n        name\n            id\n    }\n}"
+    graphql_type: query
+  complex_get:
+    path: /complex/{id}
+    method: GET
+    description: Get a single complex by ID
+    response: Complex
+    graphql_query: "query GetComplex($id: uuid!) {\n    complex(where: {id: {_eq:\
+      \ $id}}) {\n        name\n            id\n    }\n}"
+    graphql_type: query
+  complex_create:
+    path: /complex
+    method: POST
+    description: Create a new complex
+    request: Complex
+    response: Complex
+    graphql_query: "mutation CreateComplex($name: String!) {\n    insert_complex(objects:\
+      \ {name: $name}) {\n        returning {\n            name\n            id\n\
+      \        }\n    }\n}"
+    graphql_type: mutation
+  complex_update:
+    path: /complex/{id}
+    method: PUT
+    description: Update a complex by ID
+    request: Complex
+    response: Complex
+    graphql_query: "mutation UpdateComplex($id: uuid!, $changes: complex_set_input!)\
+      \ {\n    update_complex(where: {id: {_eq: $id}}, _set: $changes) {\n       \
+      \ returning {\n            name\n            id\n        }\n    }\n}"
+    graphql_type: mutation
+  complex_delete:
+    path: /complex/{id}
+    method: DELETE
+    description: Delete a complex by ID
+    graphql_query: "mutation DeleteComplex($id: uuid!) {\n    delete_complex(where:\
+      \ {id: {_eq: $id}}) {\n        affected_rows\n    }\n}"
+    graphql_type: mutation
+  order_list:
+    path: /order/list
+    method: GET
+    description: List all order
+    response: Order[]
+    graphql_query: "query {\n    order {\n        id\n            user_id\n      \
+      \      total\n            created_at\n            status\n    }\n}"
+    graphql_type: query
+  order_get:
+    path: /order/{id}
+    method: GET
+    description: Get a single order by ID
+    response: Order
+    graphql_query: "query GetOrder($id: Int!) {\n    order(where: {id: {_eq: $id}})\
+      \ {\n        id\n            user_id\n            total\n            created_at\n\
+      \            status\n    }\n}"
+    graphql_type: query
+  order_create:
+    path: /order
+    method: POST
+    description: Create a new order
+    request: Order
+    response: Order
+    graphql_query: "mutation CreateOrder($user_id: Int, $total: Float!, $status: String)\
+      \ {\n    insert_order(objects: {user_id: $user_id, total: $total, status: $status})\
+      \ {\n        returning {\n            id\n            user_id\n            total\n\
+      \            created_at\n            status\n        }\n    }\n}"
+    graphql_type: mutation
+  order_update:
+    path: /order/{id}
+    method: PUT
+    description: Update a order by ID
+    request: Order
+    response: Order
+    graphql_query: "mutation UpdateOrder($id: Int!, $changes: order_set_input!) {\n\
+      \    update_order(where: {id: {_eq: $id}}, _set: $changes) {\n        returning\
+      \ {\n            id\n            user_id\n            total\n            created_at\n\
+      \            status\n        }\n    }\n}"
+    graphql_type: mutation
+  order_delete:
+    path: /order/{id}
+    method: DELETE
+    description: Delete a order by ID
+    graphql_query: "mutation DeleteOrder($id: Int!) {\n    delete_order(where: {id:\
+      \ {_eq: $id}}) {\n        affected_rows\n    }\n}"
+    graphql_type: mutation
+  product_list:
+    path: /product/list
+    method: GET
+    description: List all product
+    response: Product[]
+    graphql_query: "query {\n    product {\n        id\n            name\n       \
+      \     price\n    }\n}"
+    graphql_type: query
+  product_get:
+    path: /product/{id}
+    method: GET
+    description: Get a single product by ID
+    response: Product
+    graphql_query: "query GetProduct($id: Int!) {\n    product(where: {id: {_eq: $id}})\
+      \ {\n        id\n            name\n            price\n    }\n}"
+    graphql_type: query
+  product_create:
+    path: /product
+    method: POST
+    description: Create a new product
+    request: Product
+    response: Product
+    graphql_query: "mutation CreateProduct($name: String!, $price: Float!) {\n   \
+      \ insert_product(objects: {name: $name, price: $price}) {\n        returning\
+      \ {\n            id\n            name\n            price\n        }\n    }\n\
+      }"
+    graphql_type: mutation
+  product_update:
+    path: /product/{id}
+    method: PUT
+    description: Update a product by ID
+    request: Product
+    response: Product
+    graphql_query: "mutation UpdateProduct($id: Int!, $changes: product_set_input!)\
+      \ {\n    update_product(where: {id: {_eq: $id}}, _set: $changes) {\n       \
+      \ returning {\n            id\n            name\n            price\n       \
+      \ }\n    }\n}"
+    graphql_type: mutation
+  product_delete:
+    path: /product/{id}
+    method: DELETE
+    description: Delete a product by ID
+    graphql_query: "mutation DeleteProduct($id: Int!) {\n    delete_product(where:\
+      \ {id: {_eq: $id}}) {\n        affected_rows\n    }\n}"
+    graphql_type: mutation
+models:
+  User:
+    fields:
+      id:
+        type: int
+        required: false
+      email:
+        type: str
+        required: true
+      password_hash:
+        type: str
+        required: true
+      created_at:
+        type: datetime
+        required: false
+      is_active:
+        type: bool
+        required: false
+    description: User model based on user table
+  Post:
+    fields:
+      id:
+        type: uuid
+        required: true
+      title:
+        type: str
+        required: true
+      content:
+        type: str
+        required: false
+      user_id:
+        type: uuid
+        required: false
+      created_at:
+        type: datetime
+        required: false
+      status:
+        type: str
+        required: false
+      updated_at:
+        type: datetime
+        required: false
+      published_at:
+        type: datetime
+        required: false
+    description: Post model based on post table
+  Complex:
+    fields:
+      name:
+        type: str
+        required: true
+      id:
+        type: uuid
+        required: true
+    description: Complex model based on complex table
+  Order:
+    fields:
+      id:
+        type: int
+        required: false
+      user_id:
+        type: int
+        required: false
+      total:
+        type: float
+        required: true
+      created_at:
+        type: datetime
+        required: false
+      status:
+        type: str
+        required: false
+    description: Order model based on order table
+  Product:
+    fields:
+      id:
+        type: int
+        required: false
+      name:
+        type: str
+        required: true
+      price:
+        type: float
+        required: true
+    description: Product model based on product table

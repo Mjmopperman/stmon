@@ -1,0 +1,100 @@
+tables:
+  users:
+    description: User accounts for the application
+    fields:
+      id:
+        type: serial
+        primary_key: true
+      email:
+        type: varchar
+        length: 255
+        nullable: false
+        unique: true
+      name:
+        type: varchar
+        length: 100
+        nullable: false
+      password_hash:
+        type: varchar
+        length: 255
+        nullable: false
+      created_at:
+        type: timestamp
+        default: now()
+      is_active:
+        type: boolean
+        default: 'true'
+  product:
+    description: Product catalog
+    fields:
+      id:
+        type: serial
+        primary_key: true
+      name:
+        type: varchar
+        nullable: false
+        length: 255
+      price:
+        type: decimal
+        nullable: false
+  orders:
+    description: Customer orders
+    fields:
+      id:
+        type: serial
+        primary_key: true
+      user_id:
+        type: integer
+        foreign_key: users.id
+      total:
+        type: decimal
+        nullable: false
+      created_at:
+        type: timestamp
+        default: now()
+      status:
+        type: varchar
+        default: pending
+        length: 50
+  posts:
+    description: Blog posts
+    fields:
+      id:
+        type: uuid
+        nullable: false
+        primary_key: true
+        default: gen_random_uuid()
+      title:
+        type: varchar
+        nullable: false
+        length: 255
+      content:
+        type: text
+      user_id:
+        type: uuid
+        foreign_key: users.id
+      created_at:
+        type: timestamp
+        default: CURRENT_TIMESTAMP
+      status:
+        type: varchar
+        default: draft
+        length: 50
+      updated_at:
+        type: timestamp
+      published_at:
+        type: timestamp
+        default: CURRENT_TIMESTAMP
+  complex:
+    description: Complex properties
+    fields:
+      name:
+        type: varchar
+        nullable: false
+        length: 255
+      id:
+        type: uuid
+        nullable: false
+        primary_key: true
+        default: gen_random_uuid()
+        description: Unique identifier for each complex

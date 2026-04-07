@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TT Logger</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    body { background: #0d0d0d; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; user-select: none; }
+
+    /* ===== SHARED ===== */
+    .screen { height: 100vh; display: none; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ===== HOME ===== */
+    #home { padding: 0.8rem; gap: 0.5rem; }
+    .home-title { text-align: center; font-size: 0.8rem; color: #555; letter-spacing: 0.2em; padding: 0.3rem 0; }
+    .new-btn { background: #16a34a; color: white; border: none; border-radius: 0.75rem; padding: 1.1rem; font-size: 1.3rem; font-weight: 800; cursor: pointer; letter-spacing: 0.05em; }
+    .new-btn:active { background: #15803d; }
+    .log-list { flex: 1; overflow-y: auto; }
+    .log-empty { color: #444; text-align: center; padding: 2rem; font-size: 0.85rem; }
+    .log-entry { background: #161616; border-radius: 0.5rem; padding: 0.6rem 0.8rem; margin-bottom: 0.4rem; }
+    .log-date { color: #555; font-size: 0.72rem; margin-bottom: 0.3rem; }
+    .log-score { font-size: 0.9rem; font-weight: bold; margin-bottom: 0.3rem; }
+    .log-score .a { color: #4ade80; }
+    .log-score .b { color: #60a5fa; }
+    .log-games { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .gchip { border-radius: 0.25rem; padding: 0.15rem 0.4rem; font-size: 0.72rem; background: #222; color: #888; }
+    .gchip.hit { border-left: 3px solid #4ade80; color: #ccc; }
+    .export-btn { background: #161616; color: #555; border: 1px solid #2a2a2a; border-radius: 0.5rem; padding: 0.6rem; font-size: 0.8rem; cursor: pointer; }
+    .export-btn:active { background: #1f1f1f; }
+
+    /* ===== GAME ===== */
+    #game { position: relative; }
+    .game-header { background: #111; padding: 0.4rem 0.8rem; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .gdots { display: flex; gap: 0.3rem; }
+    .gdot { width: 1.6rem; height: 1.6rem; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; color: #666; }
+    .gdot.cur { background: #2563eb; color: #fff; }
+    .gdot.wa { background: #16a34a; color: #fff; }
+    .gdot.wb { background: #7c3aed; color: #fff; }
+    .step-lbl { font-size: 0.75rem; color: #666; letter-spacing: 0.1em; }
+    .quit-btn { background: none; border: 1px solid #333; color: #666; border-radius: 0.3rem; padding: 0.2rem 0.5rem; font-size: 0.75rem; cursor: pointer; }
+
+    .zone-a { flex: 1; background: #0a1f12; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .zone-a:active { background: #122d1b; }
+    .zone-a .plabel { font-size: 3.5rem; font-weight: 900; color: #4ade80; line-height: 1; }
+    .zone-a .psub { font-size: 0.8rem; color: #4ade8066; margin-top: 0.4rem; }
+
+    .zone-mid { background: #0d0d0d; padding: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-shrink: 0; }
+    .mid-skip { background: #1f1f1f; color: #777; border: none; border-radius: 0.5rem; padding: 0.55rem 1.5rem; font-size: 0.85rem; cursor: pointer; }
+    .mid-skip:active { background: #2a2a2a; }
+    .mid-11 { background: #16a34a; color: white; border: none; border-radius: 0.5rem; padding: 0.55rem 0; flex: 1; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    .mid-11:active { background: #15803d; }
+    .mid-deuce { background: #2563eb; color: white; border: none; border-radius: 0.5rem; padding: 0.55rem 0; flex: 1; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    .mid-deuce:active { background: #1d4ed8; }
+
+    .zone-b { flex: 1; background: #0a121f; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+    .zone-b:active { background: #121b2d; }
+    .zone-b .plabel { font-size: 3.5rem; font-weight: 900; color: #60a5fa; line-height: 1; }
+    .zone-b .psub { font-size: 0.8rem; color: #60a5fa66; margin-top: 0.4rem; }
+
+    /* ===== ODDS ===== */
+    #odds { align-items: center; justify-content: center; padding: 2rem; gap: 1rem; }
+    .odds-who { font-size: 0.8rem; color: #555; letter-spacing: 0.15em; }
+    .odds-lbl { font-size: 1rem; color: #888; letter-spacing: 0.1em; }
+    .odds-inp { background: #161616; border: 2px solid #2a2a2a; border-radius: 0.75rem; color: white; font-size: 3rem; font-weight: bold; text-align: center; padding: 0.5rem 1rem; width: 100%; -webkit-appearance: none; appearance: none; }
+    .odds-inp:focus { border-color: #4ade80; outline: none; }
+    .odds-ok { background: #16a34a; color: white; border: none; border-radius: 0.75rem; padding: 1rem; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; }
+    .odds-ok:active { background: #15803d; }
+    .odds-skip { background: none; border: none; color: #444; font-size: 0.85rem; cursor: pointer; padding: 0.3rem; }
+
+    /* ===== SUMMARY ===== */
+    #summary { padding: 1rem; overflow-y: auto; gap: 0.5rem; }
+    .sum-title { text-align: center; font-size: 1rem; color: #4ade80; letter-spacing: 0.1em; padding: 0.5rem 0; }
+    .sum-score { text-align: center; font-size: 2rem; font-weight: 900; padding: 0.5rem 0; }
+    .sum-score .a { color: #4ade80; }
+    .sum-score .b { color: #60a5fa; }
+    .sum-game { background: #161616; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+    .sum-game h3 { color: #555; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .sum-done { background: #16a34a; color: white; border: none; border-radius: 0.75rem; padding: 1rem; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: auto; }
+    .sum-done:active { background: #15803d; }
+
+    /* Flash */
+    #flash { position: fixed; inset: 0; background: rgba(74,222,128,0.15); pointer-events: none; opacity: 0; transition: opacity 0.25s; z-index: 999; }
+    #flash.on { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div id="home" class="screen active">
+  <div class="home-title">TT BET LOGGER</div>
+  <button class="new-btn" onclick="startMatch()">▶ NEW MATCH</button>
+  <div class="log-list" id="log-list"></div>
+  <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+</div>
+
+<div id="game" class="screen">
+  <div class="game-header">
+    <div class="gdots" id="gdots"></div>
+    <div class="step-lbl" id="step-lbl"></div>
+    <button class="quit-btn" onclick="quitMatch()">✕ QUIT</button>
+  </div>
+  <div class="zone-a" id="zone-a" onclick="tapA()">
+    <div class="plabel">A</div>
+    <div class="psub" id="sub-a"></div>
+  </div>
+  <div class="zone-mid" id="zone-mid"></div>
+  <div class="zone-b" id="zone-b" onclick="tapB()">
+    <div class="plabel">B</div>
+    <div class="psub" id="sub-b"></div>
+  </div>
+</div>
+
+<div id="odds" class="screen">
+  <div class="odds-who" id="odds-who"></div>
+  <div class="odds-lbl">ODDS AT ENTRY</div>
+  <input id="odds-inp" class="odds-inp" type="number" inputmode="decimal" step="0.01" min="1.01" placeholder="1.80">
+  <button class="odds-ok" onclick="confirmOdds()">✓ CONFIRM</button>
+  <button class="odds-skip" onclick="skipOdds()">skip odds</button>
+</div>
+
+<div id="summary" class="screen">
+  <div class="sum-title">MATCH COMPLETE</div>
+  <div class="sum-score" id="sum-score"></div>
+  <div id="sum-games"></div>
+  <button class="sum-done" onclick="saveAndHome()">SAVE & HOME</button>
+</div>
+
+<div id="flash"></div>
+
+<script>
+// ===== STATE =====
+let matches = [];
+let match = null;
+let gNum = 1;
+let step = 'trigger'; // trigger | result | type
+let gData = {};
+
+// ===== STORAGE =====
+async function load() {
+  try {
+    const r = await window.storage.get('tt-matches');
+    if (r) matches = JSON.parse(r.value);
+  } catch(e) { matches = []; }
+}
+
+async function save() {
+  try { await window.storage.set('tt-matches', JSON.stringify(matches)); }
+  catch(e) { console.error(e); }
+}
+
+// ===== SCREEN =====
+function show(id) {
+  ['home','game','odds','summary'].forEach(s => {
+    const el = document.getElementById(s);
+    el.classList.toggle('active', s === id);
+  });
+}
+
+// ===== FLASH =====
+function flash() {
+  const f = document.getElementById('flash');
+  f.classList.add('on');
+  setTimeout(() => f.classList.remove('on'), 220);
+}
+
+// ===== HOME =====
+function renderHome() {
+  const el = document.getElementById('log-list');
+  if (!matches.length) { el.innerHTML = '<div class="log-empty">No matches yet</div>'; return; }
+  el.innerHTML = matches.slice().reverse().map(m => {
+    const d = new Date(m.id);
+    const ds = d.toLocaleDateString('en-ZA',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const aw = m.games.filter(g=>g.winner==='A').length;
+    const bw = m.games.filter(g=>g.winner==='B').length;
+    const chips = m.games.map(g => {
+      const cls = g.trigger ? 'gchip hit' : 'gchip';
+      const t = g.trigger ? `${g.trigger}${g.odds?'@'+g.odds:''}&rarr;${g.winner}${g.type?'('+g.type+')':''}` : 'G'+g.game+' skip';
+      return `<span class="${cls}">G${g.game}:${t}</span>`;
+    }).join('');
+    return `<div class="log-entry">
+      <div class="log-date">${ds}</div>
+      <div class="log-score"><span class="a">A ${aw}</span> — <span class="b">${bw} B</span></div>
+      <div class="log-games">${chips}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===== MATCH =====
+function startMatch() {
+  match = { id: Date.now(), games: [] };
+  gNum = 1; step = 'trigger'; gData = {};
+  show('game');
+  updateGame();
+}
+
+function quitMatch() {
+  if (confirm('Abandon match?')) { show('home'); renderHome(); }
+}
+
+function updateGame() {
+  // Dots
+  const aWins = match.games.filter(g=>g.winner==='A').length;
+  const bWins = match.games.filter(g=>g.winner==='B').length;
+  document.getElementById('gdots').innerHTML = [1,2,3,4,5].map(n => {
+    const done = match.games.find(g=>g.game===n);
+    let cls = 'gdot';
+    if (n === gNum) cls += ' cur';
+    else if (done) cls += done.winner==='A' ? ' wa' : ' wb';
+    return `<div class="${cls}">${n}</div>`;
+  }).join('');
+
+  const za = document.getElementById('zone-a');
+  const zb = document.getElementById('zone-b');
+  const zm = document.getElementById('zone-mid');
+
+  if (step === 'trigger') {
+    document.getElementById('step-lbl').textContent = 'TRIGGER?';
+    document.getElementById('sub-a').textContent = 'A triggered';
+    document.getElementById('sub-b').textContent = 'B triggered';
+    za.style.display = 'flex'; zb.style.display = 'flex';
+    zm.innerHTML = '<button class="mid-skip" onclick="noTrigger()">NO TRIGGER</button>';
+    zm.style.display = 'flex';
+  } else if (step === 'result') {
+    document.getElementById('step-lbl').textContent = 'WINNER?';
+    document.getElementById('sub-a').textContent = 'A won';
+    document.getElementById('sub-b').textContent = 'B won';
+    za.style.display = 'flex'; zb.style.display = 'flex';
+    zm.style.display = 'none';
+  } else if (step === 'type') {
+    document.getElementById('step-lbl').textContent = 'HOW?';
+    za.style.display = 'none'; zb.style.display = 'none';
+    zm.style.display = 'flex';
+    zm.innerHTML = `
+      <button class="mid-11" onclick="recordType('11')">11</button>
+      <button class="mid-deuce" onclick="recordType('deuce')">DEUCE</button>`;
+  }
+}
+
+function tapA() {
+  if (step === 'trigger') { gData = { game: gNum, trigger: 'A' }; showOdds('A'); }
+  else if (step === 'result') { gData.winner = 'A'; flash(); step = 'type'; updateGame(); }
+}
+
+function tapB() {
+  if (step === 'trigger') { gData = { game: gNum, trigger: 'B' }; showOdds('B'); }
+  else if (step === 'result') { gData.winner = 'B'; flash(); step = 'type'; updateGame(); }
+}
+
+function noTrigger() {
+  gData = { game: gNum, trigger: null, odds: null };
+  step = 'result'; updateGame();
+}
+
+// ===== ODDS =====
+function showOdds(who) {
+  document.getElementById('odds-who').textContent = `${who} TRIGGERED — GAME ${gNum}`;
+  document.getElementById('odds-inp').value = '';
+  show('odds');
+  setTimeout(() => document.getElementById('odds-inp').focus(), 80);
+}
+
+function confirmOdds() {
+  const v = parseFloat(document.getElementById('odds-inp').value);
+  gData.odds = isNaN(v) ? null : v;
+  step = 'result'; show('game'); updateGame();
+}
+
+function skipOdds() {
+  gData.odds = null;
+  step = 'result'; show('game'); updateGame();
+}
+
+// ===== TYPE & ADVANCE =====
+function recordType(t) {
+  gData.type = t;
+  match.games.push({ ...gData });
+  flash();
+
+  const aw = match.games.filter(g=>g.winner==='A').length;
+  const bw = match.games.filter(g=>g.winner==='B').length;
+
+  if (aw >= 3 || bw >= 3 || gNum >= 5) {
+    showSummary(); return;
+  }
+  gNum++; step = 'trigger'; gData = {};
+  show('game'); updateGame();
+}
+
+// ===== SUMMARY =====
+function showSummary() {
+  const aw = match.games.filter(g=>g.winner==='A').length;
+  const bw = match.games.filter(g=>g.winner==='B').length;
+  document.getElementById('sum-score').innerHTML =
+    `<span class="a">A ${aw}</span> — <span class="b">${bw} B</span>`;
+  document.getElementById('sum-games').innerHTML = match.games.map(g => `
+    <div class="sum-game">
+      <h3>GAME ${g.game}</h3>
+      <div>
+        Trigger: ${g.trigger || 'none'}${g.odds ? ' @ ' + g.odds : ''}
+        &nbsp;|&nbsp; Winner: <strong>${g.winner||'?'}</strong>${g.type ? ' ('+g.type+')' : ''}
+      </div>
+    </div>`).join('');
+  show('summary');
+}
+
+async function saveAndHome() {
+  matches.push(match);
+  await save();
+  match = null;
+  show('home'); renderHome();
+}
+
+// ===== EXPORT =====
+function exportCSV() {
+  if (!matches.length) { alert('No data yet.'); return; }
+  const rows = ['match_id,date,game,trigger,odds,winner,type'];
+  matches.forEach(m => {
+    const d = new Date(m.id).toISOString().slice(0,16);
+    m.games.forEach(g => {
+      rows.push([m.id, d, g.game, g.trigger||'', g.odds||'', g.winner||'', g.type||''].join(','));
+    });
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], {type:'text/csv'}));
+  a.download = 'tt-log.csv'; a.click();
+}
+
+// ===== INIT =====
+load().then(() => { show('home'); renderHome(); });
+</script>
+</body>
+</html>

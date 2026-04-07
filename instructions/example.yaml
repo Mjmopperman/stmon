@@ -1,0 +1,75 @@
+# Instructions file for the schema agent
+# Each instruction can be either:
+#   - A natural language prompt (processed by LLM)
+#   - A direct tool call (executed immediately without LLM)
+
+# Schema file to operate on (optional, defaults to schema/database.yaml)
+schema: schema/database.yaml
+
+instructions:
+  # Example: Natural language prompt (LLM decides which tools to use)
+  - prompt: "Create a categories table with id (serial primary key) and name (varchar 100)"
+
+  # Example: Direct tool call (bypasses LLM, executes immediately)
+  - tool: create_field
+    params:
+      table: categories
+      name: description
+      type: varchar
+      length: 500
+      nullable: true
+
+  # Another natural language prompt
+  - prompt: "Add a created_at timestamp field to categories with default now()"
+
+  # Direct tool call with all params
+  - tool: create_table
+    params:
+      name: reviews
+      description: Product reviews
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: id
+      type: serial
+      primary_key: true
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: product_id
+      type: integer
+      foreign_key: products.id
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: user_id
+      type: integer
+      foreign_key: users.id
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: rating
+      type: integer
+      nullable: false
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: comment
+      type: varchar
+      length: 1000
+      nullable: true
+
+  - tool: create_field
+    params:
+      table: reviews
+      name: created_at
+      type: timestamp
+      default: now()
+
+  # Final prompt to verify
+  - prompt: "List all tables and their fields"
