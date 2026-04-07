@@ -31,5 +31,4 @@ ON CONFLICT (email) DO NOTHING;
 INSERT INTO posts (title, content, user_id) VALUES 
     ('First Post', 'This is my first post!', 1),
     ('Second Post', 'Another interesting post.', 2)
-    ('')
 ON CONFLICT DO NOTHING;

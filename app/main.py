@@ -43,6 +43,8 @@ async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
 async def startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    from app.hasura_track import run_hasura_track
+    await run_hasura_track()
 
 @app.get("/test")
 async def test():

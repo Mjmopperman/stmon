@@ -98,3 +98,21 @@ tables:
         primary_key: true
         default: gen_random_uuid()
         description: Unique identifier for each complex
+  chess_moves:
+    description: Table to store chess moves
+    fields:
+      id:
+        type: uuid
+        nullable: false
+        primary_key: true
+        default: gen_random_uuid()
+        description: Primary key for chess moves
+      move_notation:
+        type: text
+        nullable: false
+        unique: true
+        description: Notation of the chess move
+      score:
+        type: decimal
+        nullable: false
+        description: Score associated with the move

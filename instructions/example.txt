@@ -26,4 +26,6 @@
 
 #Add 'product' entity.
 
-Sync all endpoints with database tables
+#Sync all endpoints with database tables
+
+Add a table called chess_moves with the following fields: id with auto generated uuid as primary key, move notation as text, score as decimal.
